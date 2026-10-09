@@ -15,6 +15,7 @@ import {
 } from '@nestjs/common';
 import type { Request, Response } from 'express';
 import { TasksService } from './tasks.service.js';
+import { AddTaskDto } from './DTO/addTask.dto.js';
 
 @Controller('tasks')
 export class TasksController {
@@ -28,10 +29,7 @@ export class TasksController {
   }
 
   @Get('stats')
-  nbreTask(
-    @Query('year1', ParseIntPipe) y1,
-    @Query('year2', ParseIntPipe) y2,
-  ) {
+  nbreTask(@Query('year1', ParseIntPipe) y1, @Query('year2', ParseIntPipe) y2) {
     console.log(typeof y1, typeof y2);
     let res = this.taskSer.getNbTasks(y1, y2);
     return { message: `Le nombre de tâches entre ${y1} et ${y2} est : ${res}` };
@@ -47,7 +45,8 @@ export class TasksController {
   }
 
   @Post('add')
-  addNewTask(@Body() corps: any) {
+  addNewTask(@Body() corps: AddTaskDto) {
+    console.log(corps instanceof AddTaskDto);
     let res = this.taskSer.addNewTask(corps);
     return { message: 'Task added successfully', tasks: res };
   }
